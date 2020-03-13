@@ -1,0 +1,49 @@
+.mainContainer {
+  background-color: #000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: calc(1em + 1vw);
+}
+
+.mainContainer h1 {
+  text-align: center;
+}
+
+.timerInputContainer {
+  padding: 10px;
+  border-radius: 100px;
+  border: none;
+  margin: 1em;
+  font-size: 0.5em;
+  min-width: 30%;
+  text-align: center;
+}
+
+.timerInputContainer:focus {
+  outline: none;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.startButton,
+.stopButton,
+.addCheckpointButton {
+  font-size: 0.75em;
+  padding: 5px 20px;
+  border-radius: 100px;
+  margin: 1em;
+  cursor: pointer;
+}
+
+.startButton:focus,
+.stopButton:focus,
+.addCheckpointButton:focus {
+  outline: none;
+}
