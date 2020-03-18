@@ -21,7 +21,6 @@ export const makeSound = () => {
 //   v.start(a.currentTime)
 //   v.stop(a.currentTime+duration*0.001)
 // }
-
 export const playAudio = async () => {
   // const videoUrl = 'http://www.orangefreesounds.com/wp-content/uploads/2014/11/Gong-sound.mp3';
   const videoUrl =

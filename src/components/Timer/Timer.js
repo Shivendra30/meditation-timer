@@ -5,10 +5,9 @@ import Modal from "react-modal";
 
 Modal.setAppElement("#root");
 let sampleCheckpoint = new Map();
-sampleCheckpoint.set(0, { hours: "00", mins: "39", sec: "59" });
-sampleCheckpoint.set(1, { hours: "00", mins: "24", sec: "39" });
-sampleCheckpoint.set(2, { hours: "00", mins: "09", sec: "19" });
-console.log("sampe", sampleCheckpoint);
+sampleCheckpoint.set(0, { hours: "00", mins: "34", sec: "59" });
+sampleCheckpoint.set(1, { hours: "00", mins: "19", sec: "39" });
+sampleCheckpoint.set(2, { hours: "00", mins: "04", sec: "19" });
 
 const Timer = props => {
   const [minutes, setMinutes] = useState("00");
@@ -40,8 +39,8 @@ const Timer = props => {
         playAudio();
         clearTimer();
       }
-      Object.values(checkpoints).forEach(item => {
-        const { hours, mins, sec } = item;
+      checkpoints.forEach((val, key, map) => {
+        const { hours, mins, sec } = val;
         if (
           hoursLeft === parseInt(hours) &&
           minsLeft === parseInt(mins) &&
@@ -49,6 +48,7 @@ const Timer = props => {
         )
           playAudio();
       });
+
       secondsLeft--;
     }, 1000);
     setTimer(interval);
@@ -90,7 +90,7 @@ const Timer = props => {
       </div>
       <input
         className={styles.timerInputContainer}
-        value={value}
+        value={clicked ? "" : value}
         placeholder="Enter desired time"
         onChange={e => {
           if (e.target.value.length <= 6) setValue(e.target.value);
