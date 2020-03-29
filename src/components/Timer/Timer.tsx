@@ -1,39 +1,43 @@
-import React, { useState, useEffect } from "react";
-import styles from "./Timer.module.css";
-import { playAudio } from "./audio.js";
-import Modal from "react-modal";
+import React, { useState, useEffect } from 'react';
+import styles from './Timer.module.css';
+import { playAudio } from './audio';
+import Modal from 'react-modal';
 
-Modal.setAppElement("#root");
+Modal.setAppElement('#root');
 let sampleCheckpoint = new Map();
-sampleCheckpoint.set(0, { hours: "00", mins: "34", sec: "59" });
-sampleCheckpoint.set(1, { hours: "00", mins: "19", sec: "39" });
-sampleCheckpoint.set(2, { hours: "00", mins: "04", sec: "19" });
+sampleCheckpoint.set(0, { hours: '00', mins: '34', sec: '59' });
+sampleCheckpoint.set(1, { hours: '00', mins: '19', sec: '39' });
+sampleCheckpoint.set(2, { hours: '00', mins: '04', sec: '19' });
 
-const Timer = props => {
-  const [minutes, setMinutes] = useState("00");
-  const [seconds, setSeconds] = useState("00");
-  const [hours, setHours] = useState("00");
-  const [value, setValue] = useState("");
+const Timer = () => {
+  const [minutes, setMinutes] = useState('00');
+  const [seconds, setSeconds] = useState('00');
+  const [hours, setHours] = useState('00');
+  const [value, setValue] = useState('');
   const [clicked, setClicked] = useState(false);
-  const [timer, setTimer] = useState(null);
+  const [timer, setTimer] = useState<number | undefined>(undefined);
   const [checkpoints, setCheckpoints] = useState(sampleCheckpoint);
 
   const startTimer = () => {
     let secondsLeft =
-      parseInt(hours * 3600) + parseInt(minutes * 60) + parseInt(seconds);
+      parseInt(hours) * 3600 + parseInt(minutes) * 60 + parseInt(seconds);
     if (secondsLeft === 0) return;
     setClicked(true);
 
-    let interval = setInterval(() => {
+    let interval = window.setInterval(() => {
       const hoursLeft = Math.floor(secondsLeft / 3600);
       const minsLeft = Math.floor(secondsLeft / 60) - hoursLeft * 60;
       const secsLeft = secondsLeft - (minsLeft * 60 + hoursLeft * 3600);
 
-      secsLeft < 10 ? setSeconds(`0${secsLeft}`) : setSeconds(secsLeft);
-      minsLeft < 10 ? setMinutes(`0${minsLeft}`) : setMinutes(minsLeft);
-      hoursLeft < 10 ? setHours(`0${hoursLeft}`) : setHours(hoursLeft);
-
-      // console.log({ secsLeft, minsLeft, hoursLeft });
+      secsLeft < 10
+        ? setSeconds(`0${secsLeft}`)
+        : setSeconds(secsLeft.toString());
+      minsLeft < 10
+        ? setMinutes(`0${minsLeft}`)
+        : setMinutes(minsLeft.toString());
+      hoursLeft < 10
+        ? setHours(`0${hoursLeft}`)
+        : setHours(hoursLeft.toString());
 
       if (secondsLeft < 0) {
         playAudio();
@@ -56,20 +60,20 @@ const Timer = props => {
 
   const clearTimer = () => {
     clearInterval(timer);
-    setValue("");
+    setValue('');
     setClicked(false);
-    setMinutes("00");
-    setSeconds("00");
-    setHours("00");
+    setMinutes('00');
+    setSeconds('00');
+    setHours('00');
   };
 
   useEffect(() => {
     const numArr = value
       .toString()
-      .split("")
+      .split('')
       .reverse();
 
-    let newArr = new Array(6).fill("0");
+    let newArr = new Array(6).fill('0');
     numArr.forEach((num, i) => {
       newArr[i] = num;
     });
@@ -90,7 +94,8 @@ const Timer = props => {
       </div>
       <input
         className={styles.timerInputContainer}
-        value={clicked ? "" : value}
+        value={clicked ? '' : value}
+        autoFocus={true}
         placeholder="Enter desired time"
         onChange={e => {
           if (e.target.value.length <= 6) setValue(e.target.value);
@@ -119,48 +124,60 @@ const Timer = props => {
   );
 };
 
-const Checkpoints = props => {
+interface CheckpointsProps {
+  checkpoints: Map<any, any>;
+  setCheckpoints: React.Dispatch<React.SetStateAction<Map<any, any>>>;
+}
+
+interface CheckpointsMap {
+  hours: string;
+  mins: string;
+  sec: string;
+}
+
+const Checkpoints = (props: CheckpointsProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [value, setValue] = useState(false);
+  const [value, setValue] = useState('');
   const { checkpoints, setCheckpoints } = props;
   const customStyles = {
     content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)"
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)'
     }
   };
   const closeModal = () => setIsModalOpen(false);
 
-  const addCheckoint = () => {
+  const addCheckoint = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const numArr = value
       .toString()
-      .split("")
+      .split('')
       .reverse(); //[3,2,1]
 
-    let newArr = new Array(6).fill("0");
+    let newArr = new Array(6).fill('0');
     numArr.forEach((num, i) => {
       newArr[i] = num;
     });
     newArr = newArr.reverse();
-    let newCp = {};
-    newCp["hours"] = `${newArr[0]}${newArr[1]}`;
-    newCp["mins"] = `${newArr[2]}${newArr[3]}`;
-    newCp["sec"] = `${newArr[4]}${newArr[5]}`;
+
+    let newCp: CheckpointsMap = {} as CheckpointsMap;
+    newCp['hours'] = `${newArr[0]}${newArr[1]}`;
+    newCp['mins'] = `${newArr[2]}${newArr[3]}`;
+    newCp['sec'] = `${newArr[4]}${newArr[5]}`;
 
     const newCpMap = new Map(checkpoints);
-    newCpMap.set(newCpMap.length + 1, newCp);
-    console.log(newCpMap);
+    newCpMap.set(newCpMap.size + 1, newCp);
     setCheckpoints(newCpMap);
     closeModal();
-    setValue("");
+    setValue('');
   };
 
-  const deleteCheckpoint = key => {
-    if (!window.confirm("Do you want to delete this checkpoint?")) return;
+  const deleteCheckpoint = (key: number): void => {
+    if (!window.confirm('Do you want to delete this checkpoint?')) return;
 
     let filteredCps = new Map(checkpoints);
     // Object.values(checkpoints).forEach((cp, i) => {
@@ -173,12 +190,12 @@ const Checkpoints = props => {
     setCheckpoints(filteredCps);
   };
 
-  let cpElements = [];
+  let cpElements: JSX.Element[] = [];
   checkpoints.forEach((val, key, map) => {
     const { hours, mins, sec } = val;
     cpElements.push(
       <p
-        style={{ textAlign: "center" }}
+        style={{ textAlign: 'center' }}
         onClick={() => deleteCheckpoint(key)}
         key={key}
       >{`${hours}h ${mins}m ${sec}s`}</p>
@@ -187,7 +204,7 @@ const Checkpoints = props => {
 
   return (
     <div>
-      <h3 style={{ textAlign: "center" }}>Checkpoints</h3>
+      <h3 style={{ textAlign: 'center' }}>Checkpoints</h3>
 
       {cpElements}
       <button
@@ -203,16 +220,18 @@ const Checkpoints = props => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <div>
+        <form onSubmit={addCheckoint}>
           <input
             value={value}
+            autoFocus={true}
             onChange={e => {
               if (e.target.value.length <= 6) setValue(e.target.value);
             }}
             type="number"
           />
-          <button onClick={() => addCheckoint()}>Add Checkpoint</button>
-        </div>
+          {/* <button onClick={() => addCheckoint()}>Add Checkpoint</button> */}
+          <input type="submit" value="Add Checkpoint" />
+        </form>
       </Modal>
     </div>
   );
