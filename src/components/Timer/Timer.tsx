@@ -42,6 +42,7 @@ const Timer = () => {
       if (secondsLeft < 0) {
         playAudio();
         clearTimer();
+        window.location.reload();
       }
       checkpoints.forEach((val, key, map) => {
         const { hours, mins, sec } = val;
