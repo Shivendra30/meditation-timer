@@ -1,5 +1,5 @@
 var CACHE_NAME = 'meditation-timer';
-var urlsToCache = ['/'];
+var urlsToCache = ['/', '/meditation-timer'];
 
 // Install a service worker
 self.addEventListener('install', event => {
