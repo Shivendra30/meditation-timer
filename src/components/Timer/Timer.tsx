@@ -39,10 +39,14 @@ const Timer = () => {
         ? setHours(`0${hoursLeft}`)
         : setHours(hoursLeft.toString());
 
-      if (secondsLeft < 0) {
-        playAudio();
-        clearTimer();
-        window.location.reload();
+      if (secondsLeft === 0) {
+        playAudio(() => {
+          clearTimer();
+          window.location.reload();
+        });
+
+        // clearTimer();
+        // window.location.reload();
       }
       checkpoints.forEach((val, key, map) => {
         const { hours, mins, sec } = val;
@@ -53,8 +57,7 @@ const Timer = () => {
         )
           playAudio();
       });
-
-      secondsLeft--;
+      if (secondsLeft !== 0) secondsLeft--;
     }, 1000);
     setTimer(interval);
   };
@@ -69,10 +72,7 @@ const Timer = () => {
   };
 
   useEffect(() => {
-    const numArr = value
-      .toString()
-      .split('')
-      .reverse();
+    const numArr = value.toString().split('').reverse();
 
     let newArr = new Array(6).fill('0');
     numArr.forEach((num, i) => {
@@ -93,17 +93,24 @@ const Timer = () => {
         {minutes}m&nbsp;
         {seconds}s&nbsp;
       </div>
-      <input
-        className={styles.timerInputContainer}
-        value={clicked ? '' : value}
-        autoFocus={true}
-        placeholder="Enter desired time"
-        onChange={e => {
-          if (e.target.value.length <= 6) setValue(e.target.value);
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          startTimer();
         }}
-        type="number"
-        disabled={clicked}
-      />
+      >
+        <input
+          className={styles.timerInputContainer}
+          value={clicked ? '' : value}
+          autoFocus={true}
+          placeholder="Enter desired time"
+          onChange={(e) => {
+            if (e.target.value.length <= 6) setValue(e.target.value);
+          }}
+          type="number"
+          disabled={clicked}
+        />
+      </form>
       <div className={styles.buttonContainer}>
         {!clicked && (
           <button
@@ -147,17 +154,14 @@ const Checkpoints = (props: CheckpointsProps) => {
       right: 'auto',
       bottom: 'auto',
       marginRight: '-50%',
-      transform: 'translate(-50%, -50%)'
-    }
+      transform: 'translate(-50%, -50%)',
+    },
   };
   const closeModal = () => setIsModalOpen(false);
 
   const addCheckoint = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const numArr = value
-      .toString()
-      .split('')
-      .reverse(); //[3,2,1]
+    const numArr = value.toString().split('').reverse(); //[3,2,1]
 
     let newArr = new Array(6).fill('0');
     numArr.forEach((num, i) => {
@@ -225,7 +229,7 @@ const Checkpoints = (props: CheckpointsProps) => {
           <input
             value={value}
             autoFocus={true}
-            onChange={e => {
+            onChange={(e) => {
               if (e.target.value.length <= 6) setValue(e.target.value);
             }}
             type="number"
