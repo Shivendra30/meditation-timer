@@ -2,5 +2,5 @@
 
 ## TODO
 
-[ ] Load the sound locally
-[ ] Play sound when the timer ends
+- [ ] Load the sound locally
+- [ ] Play sound when the timer ends
