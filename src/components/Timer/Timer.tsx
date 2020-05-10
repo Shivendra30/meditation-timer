@@ -5,9 +5,10 @@ import Modal from 'react-modal';
 
 Modal.setAppElement('#root');
 let sampleCheckpoint = new Map();
-sampleCheckpoint.set(0, { hours: '00', mins: '34', sec: '59' });
-sampleCheckpoint.set(1, { hours: '00', mins: '19', sec: '39' });
-sampleCheckpoint.set(2, { hours: '00', mins: '04', sec: '19' });
+sampleCheckpoint.set(0, { hours: '00', mins: '50', sec: '00' });
+sampleCheckpoint.set(1, { hours: '00', mins: '40', sec: '00' });
+sampleCheckpoint.set(2, { hours: '00', mins: '15', sec: '00' });
+sampleCheckpoint.set(3, { hours: '00', mins: '5', sec: '00' });
 
 const Timer = () => {
   const [minutes, setMinutes] = useState('00');
